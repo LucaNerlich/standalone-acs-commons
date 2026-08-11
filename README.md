@@ -12,6 +12,8 @@ list (or just copying that folder elsewhere) doesn't break anything.
 - [`acs.include`](acs.include/README.md) - in-house replacement for ACS AEM Commons' "Parameterized Include for
   Dialog Widgets" (`acs-commons/granite/ui/components/include`).
 - [`acs.email`](acs.email/README.md) - in-house replacement for ACS AEM Commons' `EmailService`.
+- [`acs.environment-indicator`](acs.environment-indicator/README.md) - in-house replacement for ACS AEM Commons'
+  "Show Author Environment Indicator", with a fallback badge for when the Unified Shell isn't present.
 
 ## Using a module in your own project
 

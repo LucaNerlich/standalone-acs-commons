@@ -1,0 +1,42 @@
+.acs-env-indicator-badge {
+    display: inline-block;
+    margin-left: 8px;
+    padding: 2px 10px;
+    font: bold 11px/1.6 sans-serif;
+    color: #fff;
+    vertical-align: middle;
+
+    --radius: 0.5rem;
+    --size: 1;
+    border-start-start-radius: round(calc(var(--radius) * var(--size)), 1px);
+    border-start-end-radius: round(calc(var(--radius) * var(--size)), 1px);
+    border-end-start-radius: round(calc(var(--radius) * var(--size)), 1px);
+    border-end-end-radius: round(calc(var(--radius) * var(--size)), 1px);
+}
+
+.acs-env-indicator-badge--fixed {
+    position: fixed;
+    top: 0;
+    right: 0;
+    z-index: 99999;
+}
+
+.acs-env-indicator-badge--dev {
+    background: #2980b9;
+}
+
+.acs-env-indicator-badge--stage {
+    background: #e67e22;
+}
+
+.acs-env-indicator-badge--prod {
+    background: #c0392b;
+}
+
+.acs-env-indicator-badge--local {
+    background: #27ae60;
+}
+
+.acs-env-indicator-badge--unknown {
+    background: #7f8c8d;
+}

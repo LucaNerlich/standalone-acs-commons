@@ -18,6 +18,7 @@
     <modules>
         <module>acs.include</module>
         <module>acs.email</module>
+        <module>acs.environment-indicator</module>
     </modules>
 
 </project>
