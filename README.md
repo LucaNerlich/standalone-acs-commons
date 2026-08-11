@@ -19,6 +19,9 @@ Copy the module's whole folder (e.g. `acs.include/`) into your repository and ad
 `<modules>` list (or build it independently, as its own reactor, exactly as it builds here). Nothing inside a module
 folder references this repo, so no further changes are needed.
 
+Alternatively, grab a pre-packaged `.zip` of a single module from the
+[Releases page](https://github.com/LucaNerlich/standalone-acs-commons/releases) instead of copying from a checkout.
+
 ## Building everything here
 
 ```bash
