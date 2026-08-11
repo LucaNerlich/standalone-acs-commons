@@ -5,7 +5,7 @@
     <groupId>com.adobe.acs</groupId>
     <artifactId>acsenvironmentindicator.parent</artifactId>
     <packaging>pom</packaging>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
     <name>ACS Environment Indicator</name>
     <description>In-house replacement for ACS AEM Commons' "Show Author Environment Indicator" feature, standalone
         and buildable/deployable on its own against any AEM as a Cloud Service instance.</description>
