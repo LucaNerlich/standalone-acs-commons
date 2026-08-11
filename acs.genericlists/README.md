@@ -65,7 +65,8 @@ differs from the defaults.
 - **The MCP-generated classic-UI dialog and its `/generic-lists.html` bulk-properties admin console.** Upstream
   built its dialog dynamically at runtime from `@FormField`-annotated interface methods
   (`com.adobe.acs.commons.mcp.form.GeneratedDialogWrapper`), an entire separate framework this module has no
-  dependency on. A plain, static Granite UI touch-UI dialog (`_cq_dialog`) achieves the identical storage contract
+  dependency on. ("MCP" here is ACS Commons' own "Manage Controlled Processes" tooling framework, unrelated to
+  Anthropic's Model Context Protocol.) A plain, static Granite UI touch-UI dialog (`_cq_dialog`) achieves the identical storage contract
   (child nodes with `jcr:title`/`value` under `list`) with far less machinery, at the cost of the dialog being
   fixed markup instead of reflectively generated - a non-issue since the shape of a title/value pair never changes.
 - **The legacy `list.json.jsp` JSON export**, which used the deprecated `org.apache.sling.commons.json` API. The
