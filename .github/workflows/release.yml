@@ -1,0 +1,68 @@
+name: Release module
+
+# Triggered by a scoped tag like "email/v1.0.0" or "include/v1.0.0" - the part before the slash is the module
+# alias, mapped by convention to the "acs.<alias>" folder (e.g. "email" -> "acs.email"). Builds that module
+# standalone (exactly as a consumer would), zips its source folder, and attaches it to a new GitHub Release.
+on:
+  push:
+    tags:
+      - '*/v*'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Resolve module from tag
+        id: module
+        env:
+          TAG: ${{ github.ref_name }}
+        run: |
+          ALIAS="${TAG%%/*}"
+          VERSION="${TAG#*/}"
+          MODULE_DIR="acs.${ALIAS}"
+
+          if [ ! -d "$MODULE_DIR" ]; then
+            echo "::error::No module directory '$MODULE_DIR' for tag '$TAG'" >&2
+            exit 1
+          fi
+
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "module_dir=$MODULE_DIR" >> "$GITHUB_OUTPUT"
+          echo "asset=${MODULE_DIR}-${VERSION}.zip" >> "$GITHUB_OUTPUT"
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v5
+        with:
+          java-version: '21'
+          distribution: temurin
+          cache: maven
+
+      - name: Build module standalone
+        env:
+          MODULE_DIR: ${{ steps.module.outputs.module_dir }}
+        run: mvn -f "$MODULE_DIR/pom.xml" --batch-mode clean install
+
+      - name: Zip module source
+        env:
+          MODULE_DIR: ${{ steps.module.outputs.module_dir }}
+          ASSET: ${{ steps.module.outputs.asset }}
+        run: zip -r "$ASSET" "$MODULE_DIR" -x "*/target/*"
+
+      - name: Create GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ github.ref_name }}
+          MODULE_DIR: ${{ steps.module.outputs.module_dir }}
+          VERSION: ${{ steps.module.outputs.version }}
+          ASSET: ${{ steps.module.outputs.asset }}
+        run: |
+          gh release create "$TAG" \
+            "$ASSET" \
+            --title "$MODULE_DIR $VERSION" \
+            --generate-notes
