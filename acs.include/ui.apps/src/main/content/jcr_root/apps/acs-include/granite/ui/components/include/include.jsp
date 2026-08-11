@@ -33,5 +33,12 @@
 
     final Resource wrapped = ParameterizedResourceWrapper.wrap(targetResource, parametersResource, namespace);
 
+    // "hide" on the included snippet's own root (as opposed to one of its descendants, already handled by
+    // getChild()/listChildren()) skips the whole include - there's no parent wrapper around this one to have
+    // filtered it out already.
+    if (wrapped.getValueMap().get("hide", Boolean.FALSE)) {
+        return;
+    }
+
     cmp.include(wrapped, cfg.get("resourceType", String.class), cmp.getOptions());
 %>

@@ -20,7 +20,7 @@
     <groupId>com.adobe.acs</groupId>
     <artifactId>acsinclude.parent</artifactId>
     <packaging>pom</packaging>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
     <name>ACS Include - Parent</name>
     <description>In-house replacement for the ACS AEM Commons "Parameterized Include for Dialog Widgets" feature, standalone and buildable/deployable on its own against any AEM as a Cloud Service instance.</description>
 

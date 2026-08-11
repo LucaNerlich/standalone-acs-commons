@@ -112,9 +112,14 @@ placeholder-resolved condition.
 ```
 
 `hide` is resolved like any other property (so it can itself be a `${{key:default}}` placeholder), then parsed as a
-boolean; a resource with `hide="true"` (after substitution) is skipped by both `getChild()` and `listChildren()` - it
-and its whole subtree don't render. A literal, non-placeholder `hide="true"`/`hide="false"` works too. No `hide`
-property (the default for every current snippet) means visible, as before.
+boolean; a resource with `hide="true"` (after substitution) is skipped - it and its whole subtree don't render. A
+literal, non-placeholder `hide="true"`/`hide="false"` works too. No `hide` property (the default for every current
+snippet) means visible, as before.
+
+This applies both to a descendant of the included snippet (filtered out via `getChild()`/`listChildren()` by its
+parent, as in the example above) **and** to the snippet's own root node - i.e. `hide` on the very resource `path`
+points to skips the whole include, not just its children. `include.jsp` checks the wrapped root's own `hide` before
+calling `cmp.include(...)`, since there's no parent wrapper around the top-level include to have filtered it out.
 
 ## Opt-in feature: typed casting
 
