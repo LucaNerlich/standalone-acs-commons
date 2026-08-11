@@ -20,15 +20,15 @@
 
     <parent>
         <groupId>com.adobe.acs</groupId>
-        <artifactId>acsinclude.parent</artifactId>
+        <artifactId>acsemail.parent</artifactId>
         <version>1.0.0</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <artifactId>acsinclude.core</artifactId>
+    <artifactId>acsemail.core</artifactId>
     <packaging>jar</packaging>
-    <name>ACS Include - Core</name>
-    <description>OSGi bundle providing the resource-wrapping placeholder substitution used by the acs-include Granite UI include component.</description>
+    <name>ACS Email - Core</name>
+    <description>OSGi bundle providing a slim, template-based EmailService on top of the native AEM mailer API.</description>
 
     <build>
         <plugins>
@@ -50,7 +50,7 @@
                         <configuration>
                             <bnd><![CDATA[
 Import-Package: javax.annotation;version=0.0.0,*
-Export-Package: com.adobe.acs.include
+Export-Package: com.adobe.acs.email
                                 ]]></bnd>
                         </configuration>
                     </execution>
@@ -98,14 +98,13 @@ Export-Package: com.adobe.acs.include
         </dependency>
 
         <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter</artifactId>
-            <scope>test</scope>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>io.wcm</groupId>
-            <artifactId>io.wcm.testing.aem-mock.junit5</artifactId>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
             <scope>test</scope>
         </dependency>
 

@@ -14,29 +14,25 @@
  |  See the License for the specific language governing permissions and
  |  limitations under the License.
 -->
+
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.adobe.acs</groupId>
-    <artifactId>acsinclude.parent</artifactId>
+    <artifactId>acsemail.parent</artifactId>
     <packaging>pom</packaging>
     <version>1.0.0</version>
-    <name>ACS Include - Parent</name>
-    <description>In-house replacement for the ACS AEM Commons "Parameterized Include for Dialog Widgets" feature, standalone and buildable/deployable on its own against any AEM as a Cloud Service instance.</description>
+    <name>ACS Email</name>
+    <description>In-house replacement for the ACS AEM Commons EmailService, standalone and buildable/deployable on
+        its own against any AEM as a Cloud Service instance.</description>
 
     <modules>
         <module>core</module>
-        <module>ui.apps.structure</module>
-        <module>ui.apps</module>
     </modules>
 
     <properties>
         <aem.host>localhost</aem.host>
         <aem.port>4502</aem.port>
-        <sling.user>admin</sling.user>
-        <sling.password>admin</sling.password>
-        <vault.user>admin</vault.user>
-        <vault.password>admin</vault.password>
 
         <java.version>21</java.version>
         <bnd.version>7.1.0</bnd.version>
@@ -155,31 +151,6 @@
                     </configuration>
                 </plugin>
 
-                <!-- Jackrabbit FileVault Package Plugin -->
-                <plugin>
-                    <groupId>org.apache.jackrabbit</groupId>
-                    <artifactId>filevault-package-maven-plugin</artifactId>
-                    <extensions>true</extensions>
-                    <version>1.3.2</version>
-                    <configuration>
-                        <showImportPackageReport>false</showImportPackageReport>
-                        <filterSource>src/main/content/META-INF/vault/filter.xml</filterSource>
-                    </configuration>
-                </plugin>
-
-                <!-- Content Package Plugin -->
-                <plugin>
-                    <groupId>com.day.jcr.vault</groupId>
-                    <artifactId>content-package-maven-plugin</artifactId>
-                    <version>1.0.6</version>
-                    <configuration>
-                        <targetURL>http://${aem.host}:${aem.port}/crx/packmgr/service.jsp</targetURL>
-                        <failOnError>true</failOnError>
-                        <userId>${vault.user}</userId>
-                        <password>${vault.password}</password>
-                    </configuration>
-                </plugin>
-
                 <!-- Maven Enforcer Plugin -->
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -256,44 +227,6 @@
             </build>
         </profile>
 
-        <!-- Development profile: build + install the content packages -->
-        <profile>
-            <id>autoInstallPackage</id>
-            <activation>
-                <activeByDefault>false</activeByDefault>
-            </activation>
-            <build>
-                <pluginManagement>
-                    <plugins>
-                        <plugin>
-                            <groupId>org.apache.jackrabbit</groupId>
-                            <artifactId>filevault-package-maven-plugin</artifactId>
-                            <executions>
-                                <execution>
-                                    <id>create-package</id>
-                                    <goals>
-                                        <goal>package</goal>
-                                    </goals>
-                                </execution>
-                            </executions>
-                        </plugin>
-                        <plugin>
-                            <groupId>com.day.jcr.vault</groupId>
-                            <artifactId>content-package-maven-plugin</artifactId>
-                            <executions>
-                                <execution>
-                                    <id>install-package</id>
-                                    <goals>
-                                        <goal>install</goal>
-                                    </goals>
-                                </execution>
-                            </executions>
-                        </plugin>
-                    </plugins>
-                </pluginManagement>
-            </build>
-        </profile>
-
     </profiles>
 
     <!-- ====================================================================== -->
@@ -307,6 +240,13 @@
                 <artifactId>aem-sdk-api</artifactId>
                 <version>${aem.sdk.api}</version>
                 <scope>provided</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <version>1.18.42</version>
+                <scope>compile</scope>
             </dependency>
 
             <!--     Testing     -->
@@ -330,13 +270,6 @@
                 <groupId>org.mockito</groupId>
                 <artifactId>mockito-junit-jupiter</artifactId>
                 <version>5.20.0</version>
-                <scope>test</scope>
-            </dependency>
-
-            <dependency>
-                <groupId>io.wcm</groupId>
-                <artifactId>io.wcm.testing.aem-mock.junit5</artifactId>
-                <version>5.6.12</version>
                 <scope>test</scope>
             </dependency>
 
