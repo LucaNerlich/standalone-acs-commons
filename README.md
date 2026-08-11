@@ -15,6 +15,8 @@ list (or just copying that folder elsewhere) doesn't break anything.
 - [`acs.environment-indicator`](acs.environment-indicator/README.md) - in-house replacement for ACS AEM Commons'
   "Show Author Environment Indicator", with a fallback badge for when the Unified Shell isn't present.
 - [`acs.workflow`](acs.workflow/README.md) - in-house replacement for ACS AEM Commons' `WorkflowPackageManager`.
+- [`acs.genericlists`](acs.genericlists/README.md) - in-house replacement for ACS AEM Commons' "Generic Lists"
+  feature.
 
 ## Using a module in your own project
 

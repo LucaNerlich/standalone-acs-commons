@@ -20,6 +20,7 @@
         <module>acs.email</module>
         <module>acs.environment-indicator</module>
         <module>acs.workflow</module>
+        <module>acs.genericlists</module>
     </modules>
 
 </project>

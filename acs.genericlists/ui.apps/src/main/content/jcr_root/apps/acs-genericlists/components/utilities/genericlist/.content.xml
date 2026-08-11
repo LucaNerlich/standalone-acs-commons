@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jcr:root xmlns:jcr="http://www.jcp.org/jcr/1.0"
+    jcr:primaryType="cq:Component"
+    jcr:title="Generic List"
+    jcr:description="A generic list of title/value pairs, editable via a dialog and readable via the GenericList Page adapter."
+    componentGroup=".hidden"/>
