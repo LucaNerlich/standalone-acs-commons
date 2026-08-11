@@ -9,8 +9,7 @@ All notable changes to this module are documented here. Format loosely follows
 
 - Badge styling moved out of inline JS styles into `env-indicator.css`, nested under `.acs-env-indicator-badge`
   using native CSS nesting. Color/fixed-position variants are applied via a second `.is-<label>`/`.is-fixed` class
-  rather than a `--<label>` suffix - native CSS nesting can't do Sass-style suffix concatenation, so `&--dev` parses
-  as `&` compounded with an always-unmatched type selector and silently never matches.
+  rather than a `--<label>` suffix.
 - Simplified the badge's `border-radius` to a static `0.5rem`. It previously replicated the Unified Shell's own
   `round(calc(var(--radius) * var(--size)), 1px)` formula, but `--radius`/`--size` were always constants here, so
   the whole `calc()`/`round()` indirection reduced to a no-op around a fixed value.
