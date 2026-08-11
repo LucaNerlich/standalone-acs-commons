@@ -61,6 +61,8 @@ local author instance too.
 
 The badge's colors live in
 [`env-indicator.css`](ui.apps/src/main/content/jcr_root/apps/acs-environment-indicator/clientlibs/clientlib-env-indicator/css/env-indicator.css)
-as `.acs-env-indicator-badge--<label>` modifier classes (lowercased label, e.g. `--dev`, `--stage`, `--prod`,
-`--local`), with `--unknown` as the fallback for any label not in `KNOWN_LABELS`. If you add a label to
-`DOMAIN_LABELS`/`KNOWN_LABELS`, add a matching color class to the CSS as well.
+as `.is-<label>` modifier classes nested under `.acs-env-indicator-badge` (lowercased label, e.g. `.is-dev`,
+`.is-stage`, `.is-prod`, `.is-local`), with `.is-unknown` as the fallback for any label not in `KNOWN_LABELS`.
+(Native CSS nesting can't do Sass-style suffix concatenation - `&--dev` would parse as `&` compounded with an
+always-unmatched type selector, so the modifier is a second class instead.) If you add a label to
+`DOMAIN_LABELS`/`KNOWN_LABELS`, add a matching `&.is-<label>` rule to the CSS as well.

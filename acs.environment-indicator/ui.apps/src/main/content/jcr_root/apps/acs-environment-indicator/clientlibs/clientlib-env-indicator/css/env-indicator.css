@@ -5,38 +5,32 @@
     font: bold 11px/1.6 sans-serif;
     color: #fff;
     vertical-align: middle;
+    border-radius: 0.5rem;
 
-    --radius: 0.5rem;
-    --size: 1;
-    border-start-start-radius: round(calc(var(--radius) * var(--size)), 1px);
-    border-start-end-radius: round(calc(var(--radius) * var(--size)), 1px);
-    border-end-start-radius: round(calc(var(--radius) * var(--size)), 1px);
-    border-end-end-radius: round(calc(var(--radius) * var(--size)), 1px);
-}
+    &.is-fixed {
+        position: fixed;
+        top: 0;
+        right: 0;
+        z-index: 99999;
+    }
 
-.acs-env-indicator-badge--fixed {
-    position: fixed;
-    top: 0;
-    right: 0;
-    z-index: 99999;
-}
+    &.is-dev {
+        background: #2980b9;
+    }
 
-.acs-env-indicator-badge--dev {
-    background: #2980b9;
-}
+    &.is-stage {
+        background: #e67e22;
+    }
 
-.acs-env-indicator-badge--stage {
-    background: #e67e22;
-}
+    &.is-prod {
+        background: #c0392b;
+    }
 
-.acs-env-indicator-badge--prod {
-    background: #c0392b;
-}
+    &.is-local {
+        background: #27ae60;
+    }
 
-.acs-env-indicator-badge--local {
-    background: #27ae60;
-}
-
-.acs-env-indicator-badge--unknown {
-    background: #7f8c8d;
+    &.is-unknown {
+        background: #7f8c8d;
+    }
 }

@@ -1,7 +1,7 @@
 (function () {
     // Map each AEM author hostname to a short, friendly label. Replace these examples with your own
     // Cloud Manager program/environment author hostnames (Cloud Manager > Environments > "Author" URL).
-    // Also update the matching `--<label>` color modifier classes in env-indicator.css if you add labels.
+    // Also update the matching `.is-<label>` color modifier classes in env-indicator.css if you add labels.
     const DOMAIN_LABELS = {
         'author-p12345-e123456.adobeaemcloud.com': 'DEV',
         'author-p12345-e123457.adobeaemcloud.com': 'STAGE',
@@ -13,15 +13,30 @@
 
     const BADGE_ID = 'acs-env-indicator-badge';
     const BADGE_CLASS = 'acs-env-indicator-badge';
-    const FIXED_MODIFIER_CLASS = `${BADGE_CLASS}--fixed`;
+    const FIXED_MODIFIER_CLASS = 'is-fixed';
 
+    /**
+     * Generates a CSS class string based on the provided label.
+     * If the label exists in the predefined list of known labels, it returns the label in lowercase prefixed with "is-".
+     * If the label is not found, it defaults to returning "is-unknown".
+     *
+     * @param {string} label - The label to be evaluated and used for generating the class string.
+     * @return {string} A CSS class string in the format "is-{label}" or "is-unknown".
+     */
     function colorModifierClass(label) {
-        return `${BADGE_CLASS}--${KNOWN_LABELS.includes(label) ? label.toLowerCase() : 'unknown'}`;
+        return `is-${KNOWN_LABELS.includes(label) ? label.toLowerCase() : 'unknown'}`;
     }
 
+    /**
+     * Updates the badge element's CSS classes to set the appropriate color based on the provided label.
+     *
+     * @param {HTMLElement} badge - The badge element whose color modifier class needs to be updated.
+     * @param {string} label - The label used to determine the new color modifier class.
+     * @return {void} Does not return any value.
+     */
     function setBadgeColor(badge, label) {
         Array.from(badge.classList)
-            .filter((c) => c.startsWith(`${BADGE_CLASS}--`) && c !== FIXED_MODIFIER_CLASS)
+            .filter((c) => c.startsWith('is-') && c !== FIXED_MODIFIER_CLASS)
             .forEach((c) => badge.classList.remove(c));
         badge.classList.add(colorModifierClass(label));
     }
@@ -39,6 +54,11 @@
         return null;
     }
 
+    /**
+     * Creates and returns a new badge element.
+     *
+     * @return {HTMLSpanElement} A span element with a predefined ID and class name.
+     */
     function createBadge() {
         const badge = document.createElement('span');
         badge.id = BADGE_ID;
@@ -46,9 +66,17 @@
         return badge;
     }
 
-    // Without the unified shell, the classic AEM shell home anchor ("Adobe Experience Manager")
-    // is the closest local equivalent of the unified shell's env-labels slot, so the badge goes next to it.
-    // Note: <coral-shell-homeanchor-label> is a custom element tag, not a class - use a tag selector.
+    /**
+     * Displays a badge with the specified label. If a badge does not exist,
+     * it creates one and appends it to the appropriate location in the DOM.
+     *
+     * Without the unified shell, the classic AEM shell home anchor ("Adobe Experience Manager")
+     * is the closest local equivalent of the unified shell's env-labels slot, so the badge goes next to
+     * Note: <coral-shell-homeanchor-label> is a custom element tag, not a class - use a tag selector.
+     *
+     * @param {string} label - The text to be displayed on the badge.
+     * @return {void} - Does not return a value.
+     */
     function showOwnBadge(label) {
         let badge = document.getElementById(BADGE_ID);
         if (!badge) {
@@ -65,6 +93,12 @@
         setBadgeColor(badge, label);
     }
 
+    /**
+     * Adds an environment indicator to the user interface based on the current hostname.
+     * This indicator displays a label derived from predefined domain labels.
+     *
+     * @return {void} This method does not return a value.
+     */
     function addEnvIndicator() {
         const currentHostname = window?.location?.hostname || '';
         const LABEL = DOMAIN_LABELS[currentHostname] || 'Unknown';
