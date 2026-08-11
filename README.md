@@ -26,3 +26,6 @@ mvn clean install                  # builds every module's core/ui.apps/ui.apps.
 ```
 
 See each module's own README for its specific `-P` deployment profiles (e.g. `autoInstallBundle`).
+
+> **Note:** Looking for a Vite-based frontend setup for AEM as a Cloud Service? Check out
+> [aem-vite](https://github.com/LucaNerlich/aem-vite).
