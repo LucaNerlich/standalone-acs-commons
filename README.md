@@ -1,2 +1,27 @@
 # standalone-acs-commons
-Standalone ACS Commons Modules
+
+A collection of standalone AEM as a Cloud Service modules, each an in-house replacement for one ACS AEM Commons
+feature. Every module lives in its own top-level folder with its own `pom.xml` and has **no dependency on anything
+else in this repo** - it's meant to be copied wholesale into a consumer project (or built here, standalone) without
+dragging along the rest of this repo. The root `pom.xml` is a pure build-all convenience aggregator; it is
+deliberately *not* the Maven `<parent>` of any module, so removing a module folder from the aggregator's `<modules>`
+list (or just copying that folder elsewhere) doesn't break anything.
+
+## Modules
+
+- [`acs.include`](acs.include/README.md) - in-house replacement for ACS AEM Commons' "Parameterized Include for
+  Dialog Widgets" (`acs-commons/granite/ui/components/include`).
+
+## Using a module in your own project
+
+Copy the module's whole folder (e.g. `acs.include/`) into your repository and add it to your own root `pom.xml`'s
+`<modules>` list (or build it independently, as its own reactor, exactly as it builds here). Nothing inside a module
+folder references this repo, so no further changes are needed.
+
+## Building everything here
+
+```bash
+mvn clean install                  # builds every module's core/ui.apps/ui.apps.structure
+```
+
+See each module's own README for its specific `-P` deployment profiles (e.g. `autoInstallBundle`).

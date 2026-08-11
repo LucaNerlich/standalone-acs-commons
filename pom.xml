@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ |  Pure build-all aggregator for this repo's standalone modules. Deliberately NOT the Maven <parent> of any
+ |  module below - each module folder is self-contained (its own groupId/artifactId/dependencyManagement/
+ |  pluginManagement) and buildable/copy-pasteable entirely on its own. This POM only exists so `mvn install`
+ |  from the repo root builds all of them in one go.
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.lucanerlich</groupId>
+    <artifactId>standalone-acs-commons</artifactId>
+    <packaging>pom</packaging>
+    <version>0.0.1-SNAPSHOT</version>
+    <name>standalone-acs-commons</name>
+    <description>Aggregator for standalone, copy-paste-able ACS AEM Commons replacement modules.</description>
+
+    <modules>
+        <module>acs.include</module>
+    </modules>
+
+</project>
