@@ -8,10 +8,11 @@ read that list back via `Page#adaptTo(GenericList.class)`.
 
 - `core` - `com.adobe.acs.genericlists.GenericList`/`GenericListImpl`/`GenericListAdapterFactory`: adapts a
   `com.day.cq.wcm.api.Page` (whose content resource is `acs-genericlists/components/utilities/genericlist`) to
-  `GenericList`, giving `getItems()` and `lookupTitle(value[, locale])`.
-- `ui.apps` / `ui.apps.structure` - the `genericlist` component (dialog only, no render script - see below), a
-  `genericlist` page template restricted to `/content/generic-lists(/.*)?`, and a `datasource` JSP that feeds a
-  Granite UI `select`/`radiogroup`'s options from an existing generic-list page.
+  `GenericList`, giving `getItems()` and `lookupTitle(value[, locale])`. Also `GenericListDataSourceServlet`,
+  registered against the `genericlist/datasource` resource type, which feeds a Granite UI `select`/`radiogroup`'s
+  options from an existing generic-list page.
+- `ui.apps` / `ui.apps.structure` - the `genericlist` component (dialog only, no render script - see below) and a
+  `genericlist` page template restricted to `/content/generic-lists(/.*)?`.
 
 ## How it works
 
@@ -70,8 +71,8 @@ differs from the defaults.
   (child nodes with `jcr:title`/`value` under `list`) with far less machinery, at the cost of the dialog being
   fixed markup instead of reflectively generated - a non-issue since the shape of a title/value pair never changes.
 - **The legacy `list.json.jsp` JSON export**, which used the deprecated `org.apache.sling.commons.json` API. The
-  `datasource` JSP (for feeding dialog field options) and the `GenericList` Java API (for any other code) cover the
-  same use cases without that dependency.
+  `GenericListDataSourceServlet` (for feeding dialog field options) and the `GenericList` Java API (for any other
+  code) cover the same use cases without that dependency.
 - **A page render script.** A generic-list page is a pure data container, edited entirely through its dialog; there
   is nothing meaningful to preview, so (unlike upstream's `body.jsp`, itself just an inline copy of the same
   dialog-generation form) no render script is provided at all.

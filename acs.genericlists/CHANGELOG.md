@@ -3,6 +3,14 @@
 All notable changes to this module are documented here. Format loosely follows
 [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [1.0.1] - 2026-08-12
+
+### Changed
+
+- Replaced the `datasource` JSP with `GenericListDataSourceServlet`, a Java servlet registered against the same
+  `genericlist/datasource` resource type with identical behavior - avoids JSP scripting, consistent with how the
+  rest of this module is implemented.
+
 ## [1.0.0] - 2026-08-11
 
 ### Added
