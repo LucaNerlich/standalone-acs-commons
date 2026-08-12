@@ -17,6 +17,7 @@ public final class GenericListImpl implements GenericList {
     static final String PN_TITLE = "jcr:title";
     static final String PN_VALUE = "value";
     static final String TITLE_PREFIX = PN_TITLE + ".";
+    static final String NN_ITEM = "item";
 
     public static final class ItemImpl implements Item {
 
@@ -76,7 +77,11 @@ public final class GenericListImpl implements GenericList {
         } else {
             final List<Item> tempItems = new ArrayList<>();
             final Map<String, Item> tempValueMapping = new HashMap<>();
-            final Iterator<Resource> children = listParsys.listChildren();
+            // The Granite multifield dialog nests rows one level deeper, under a fixed "item" child (matching
+            // the "name" path given to its composite field) - fall back to the parsys' own direct children for
+            // content authored without going through that dialog (e.g. via repoinit).
+            final Resource itemsNode = listParsys.getChild(NN_ITEM) != null ? listParsys.getChild(NN_ITEM) : listParsys;
+            final Iterator<Resource> children = itemsNode.listChildren();
             while (children.hasNext()) {
                 final Resource res = children.next();
                 final ValueMap map = res.getValueMap();

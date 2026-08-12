@@ -1,26 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
- |  Copyright 2015 Adobe Systems Incorporated
- |
- |  Licensed under the Apache License, Version 2.0 (the "License");
- |  you may not use this file except in compliance with the License.
- |  You may obtain a copy of the License at
- |
- |      http://www.apache.org/licenses/LICENSE-2.0
- |
- |  Unless required by applicable law or agreed to in writing, software
- |  distributed under the License is distributed on an "AS IS" BASIS,
- |  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- |  See the License for the specific language governing permissions and
- |  limitations under the License.
--->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <!-- ====================================================================== -->
     <!-- P A R E N T  P R O J E C T  D E S C R I P T I O N                      -->
     <!-- ====================================================================== -->
-
     <parent>
         <groupId>com.adobe.acs</groupId>
         <artifactId>acsgenericlists.parent</artifactId>
@@ -31,10 +15,11 @@
     <!-- ====================================================================== -->
     <!-- P R O J E C T  D E S C R I P T I O N                                   -->
     <!-- ====================================================================== -->
-    <artifactId>acsgenericlists.ui.apps</artifactId>
+    <artifactId>acsgenericlists.ui.content</artifactId>
     <packaging>content-package</packaging>
-    <name>ACS Generic Lists - UI apps</name>
-    <description>Granite UI authoring dialog and page template for the generic list component, the in-house replacement for acs-commons/components/utilities/genericlist.</description>
+    <name>ACS Generic Lists - UI content</name>
+    <description>Editable Template (/conf) for the generic list component, replacing the static /apps template so
+        pages can be created through the standard Sites console "Create Page" wizard.</description>
 
     <!-- ====================================================================== -->
     <!-- B U I L D   D E F I N I T I O N                                        -->
@@ -54,23 +39,27 @@
                     <showImportPackageReport>false</showImportPackageReport>
                     <properties>
                         <cloudManagerTarget>none</cloudManagerTarget>
-                        <noIntermediateSaves>true</noIntermediateSaves>
                     </properties>
 
                     <group>com.adobe.acs</group>
-                    <name>acs-genericlists.ui.apps</name>
-                    <packageType>application</packageType>
+                    <name>acsgenericlists.ui.content</name>
+                    <packageType>content</packageType>
 
-                    <repositoryStructurePackages>
-                        <repositoryStructurePackage>
-                            <groupId>com.adobe.acs</groupId>
-                            <artifactId>acsgenericlists.ui.apps.structure</artifactId>
-                        </repositoryStructurePackage>
-                    </repositoryStructurePackages>
+                    <validatorsSettings>
+                        <jackrabbit-filter>
+                            <options>
+                                <validRoots>/conf</validRoots>
+                            </options>
+                        </jackrabbit-filter>
+                    </validatorsSettings>
 
                     <dependencies>
+                        <dependency>
+                            <groupId>com.adobe.acs</groupId>
+                            <artifactId>acsgenericlists.ui.apps</artifactId>
+                            <version>${project.version}</version>
+                        </dependency>
                     </dependencies>
-
                 </configuration>
             </plugin>
 
@@ -83,31 +72,8 @@
                     <failOnError>true</failOnError>
                 </configuration>
             </plugin>
-
-            <!-- HTL Maven Plugin -->
-            <plugin>
-                <groupId>org.apache.sling</groupId>
-                <artifactId>htl-maven-plugin</artifactId>
-                <version>2.0.4-1.4.0</version>
-                <executions>
-                    <execution>
-                        <id>validate-htl-scripts</id>
-                        <goals>
-                            <goal>validate</goal>
-                        </goals>
-                        <phase>generate-sources</phase>
-                        <configuration>
-                            <failOnWarnings>true</failOnWarnings>
-                            <generateJavaClasses>true</generateJavaClasses>
-                            <generatedJavaClassesPrefix>org.apache.sling.scripting.sightly</generatedJavaClassesPrefix>
-                            <sourceDirectory>${project.build.sourceDirectory}</sourceDirectory>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
         </plugins>
     </build>
-
 
     <!-- ====================================================================== -->
     <!-- D E P E N D E N C I E S                                                -->
@@ -116,13 +82,7 @@
 
         <dependency>
             <groupId>com.adobe.acs</groupId>
-            <artifactId>acsgenericlists.core</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.adobe.acs</groupId>
-            <artifactId>acsgenericlists.ui.apps.structure</artifactId>
+            <artifactId>acsgenericlists.ui.apps</artifactId>
             <version>${project.version}</version>
             <type>zip</type>
         </dependency>
@@ -130,14 +90,6 @@
         <dependency>
             <groupId>com.adobe.aem</groupId>
             <artifactId>aem-sdk-api</artifactId>
-        </dependency>
-
-        <!-- HTL dependencies needed for the HTL Maven Plugin source code generation -->
-        <dependency>
-            <groupId>org.apache.sling</groupId>
-            <artifactId>org.apache.sling.scripting.sightly.runtime</artifactId>
-            <version>1.2.4-1.4.0</version>
-            <scope>provided</scope>
         </dependency>
 
     </dependencies>

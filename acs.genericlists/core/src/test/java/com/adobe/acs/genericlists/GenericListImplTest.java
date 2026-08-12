@@ -45,6 +45,21 @@ class GenericListImplTest {
     }
 
     @Test
+    void getItems_readsFromNestedItemNode_whenPresent() {
+        // this is the shape the "list" component's multifield dialog (name="./item") actually produces
+        final Resource list = context.create().resource("/content/list");
+        context.create().resource("/content/list/item/item0", Map.of("jcr:title", "First", "value", "first"));
+        context.create().resource("/content/list/item/item1", Map.of("jcr:title", "Second", "value", "second"));
+
+        final GenericListImpl underTest = new GenericListImpl(list);
+
+        final List<GenericList.Item> items = underTest.getItems();
+        assertEquals(2, items.size());
+        assertEquals("First", items.get(0).getTitle());
+        assertEquals("first", items.get(0).getValue());
+    }
+
+    @Test
     void lookupTitle_returnsTitleForKnownValue_andNullForUnknown() {
         final Resource list = context.create().resource("/content/list");
         context.create().resource("/content/list/item0", Map.of("jcr:title", "First", "value", "first"));

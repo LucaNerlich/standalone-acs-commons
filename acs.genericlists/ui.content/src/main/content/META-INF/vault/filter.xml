@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<workspaceFilter version="1.0">
+    <filter root="/conf/acs-genericlists/settings/wcm/template-types/generic-list-base"/>
+    <filter root="/conf/acs-genericlists/settings/wcm/templates/generic-list"/>
+</workspaceFilter>

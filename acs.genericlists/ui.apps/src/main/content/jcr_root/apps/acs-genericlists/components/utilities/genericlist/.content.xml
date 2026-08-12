@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jcr:root xmlns:jcr="http://www.jcp.org/jcr/1.0"
+<jcr:root xmlns:jcr="http://www.jcp.org/jcr/1.0" xmlns:sling="http://sling.apache.org/jcr/sling/1.0"
     jcr:primaryType="cq:Component"
     jcr:title="Generic List"
     jcr:description="A generic list of title/value pairs, editable via a dialog and readable via the GenericList Page adapter."
+    sling:resourceSuperType="core/wcm/components/page/v3/page"
     componentGroup=".hidden"/>

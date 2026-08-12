@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jcr:root xmlns:jcr="http://www.jcp.org/jcr/1.0" xmlns:cq="http://www.day.com/jcr/cq/1.0"
+    jcr:primaryType="cq:Template">
+    <jcr:content
+        cq:templateType="/conf/acs-genericlists/settings/wcm/template-types/generic-list-base"
+        jcr:primaryType="cq:PageContent"
+        jcr:title="Generic List"
+        jcr:description="A generic list of title/value pairs."
+        allowedPaths="[/content/generic-lists(/.*)?]"
+        status="enabled"/>
+</jcr:root>

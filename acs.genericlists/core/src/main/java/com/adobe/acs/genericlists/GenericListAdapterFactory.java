@@ -15,11 +15,10 @@ public class GenericListAdapterFactory implements AdapterFactory {
     @Override
     @SuppressWarnings("unchecked")
     public <AdapterType> AdapterType getAdapter(final Object adaptable, final Class<AdapterType> type) {
-        if (type != GenericList.class || !(adaptable instanceof Page)) {
+        if (type != GenericList.class || !(adaptable instanceof Page page)) {
             return null;
         }
 
-        final Page page = (Page) adaptable;
         if (page.getContentResource() == null
                 || !page.getContentResource().isResourceType(GenericListImpl.RT_GENERIC_LIST)) {
             return null;
