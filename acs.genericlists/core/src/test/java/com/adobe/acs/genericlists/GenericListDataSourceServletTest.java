@@ -47,8 +47,10 @@ class GenericListDataSourceServletTest {
     void doGet_withGenericListPage_populatesDataSourceFromItems() {
         context.registerInjectActivateService(new GenericListAdapterFactory());
         context.create().page("/content/my-list", null,
-                "sling:resourceType", GenericListImpl.RT_GENERIC_LIST);
-        context.create().resource("/content/my-list/jcr:content/list/item0",
+                "sling:resourceType", GenericListImpl.RT_GENERIC_LIST_PAGE);
+        context.create().resource("/content/my-list/jcr:content/root/keyValueList",
+                "sling:resourceType", GenericListImpl.RT_KEY_VALUE_LIST);
+        context.create().resource("/content/my-list/jcr:content/root/keyValueList/items/item0",
                 Map.of("jcr:title", "First", "value", "first"));
 
         context.create().resource("/content/field/datasource", Map.of("path", "/content/my-list"));

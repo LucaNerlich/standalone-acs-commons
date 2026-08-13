@@ -39,13 +39,35 @@ class GenericListAdapterFactoryTest {
     @Test
     void getAdapter_returnsGenericListForAMatchingPage() {
         final Page page = context.create().page("/content/my-list", null,
-                "sling:resourceType", GenericListImpl.RT_GENERIC_LIST);
-        context.create().resource("/content/my-list/jcr:content/list/item0",
+                "sling:resourceType", GenericListImpl.RT_GENERIC_LIST_PAGE);
+        context.create().resource("/content/my-list/jcr:content/root/keyValueList",
+                "sling:resourceType", GenericListImpl.RT_KEY_VALUE_LIST);
+        context.create().resource("/content/my-list/jcr:content/root/keyValueList/items/item0",
                 Map.of("jcr:title", "First", "value", "first"));
 
         final GenericList list = underTest.getAdapter(page, GenericList.class);
 
         assertEquals(1, list.getItems().size());
+        assertEquals("First", list.getItems().get(0).getTitle());
+    }
+
+    @Test
+    void getAdapter_returnsNullWhenKeyValueListComponentIsMissing() {
+        final Page page = context.create().page("/content/my-list", null,
+                "sling:resourceType", GenericListImpl.RT_GENERIC_LIST_PAGE);
+
+        assertNull(underTest.getAdapter(page, GenericList.class));
+    }
+
+    @Test
+    void getAdapter_keepsSupportingLegacyGenericListPages() {
+        final Page page = context.create().page("/content/my-list", null,
+                "sling:resourceType", GenericListImpl.RT_LEGACY_GENERIC_LIST);
+        context.create().resource("/content/my-list/jcr:content/list/item/item0",
+                Map.of("jcr:title", "First", "value", "first"));
+
+        final GenericList list = underTest.getAdapter(page, GenericList.class);
+
         assertEquals("First", list.getItems().get(0).getTitle());
     }
 }

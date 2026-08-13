@@ -3,6 +3,27 @@
 All notable changes to this module are documented here. Format loosely follows
 [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [1.1.1] - 2026-08-13
+
+### Changed
+
+- Split the former all-in-one `genericlist` page component into a clean
+  `acs-genericlists/components/page` proxy of Core Page v3 and a standalone
+  `acs-genericlists/components/key-value-list` content component.
+- Rebuilt the editable template and its template type with a Core Container root and an editable Key/Value List
+  component in the structure/initial merge. Authors now edit the ordered pairs through the component dialog.
+- Added a Coral UI 3 table preview of the authored pairs and registered the list resource as a Sling Model.
+- Retained `Page#adaptTo(GenericList.class)` support for pages created with version 1.1.0.
+
+### Fixed
+
+- The table preview used bare `<coral-table>`/`<coral-table-row>` custom-element tags, which never got upgraded
+  by Coral's JS on render and were left as unstyled unknown elements (default `display: inline`), collapsing the
+  whole table onto one line. Switched to the `is="coral-table"` attribute-upgrade pattern on native
+  `<table>`/`<tr>`/`<td>` elements instead - the same convention this project's own `pim-import.html` and
+  `localuserreport.html` already use - so the markup renders correctly as a table even before any JS upgrade
+  happens.
+
 ## [1.1.0] - 2026-08-12
 
 ### Changed

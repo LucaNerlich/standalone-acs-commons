@@ -60,6 +60,32 @@ class GenericListImplTest {
     }
 
     @Test
+    void getItems_readsFromComponentItemsNode() {
+        final Resource list = context.create().resource("/content/list",
+                "sling:resourceType", GenericListImpl.RT_KEY_VALUE_LIST);
+        context.create().resource("/content/list/items/item0", Map.of("jcr:title", "First", "value", "first"));
+        context.create().resource("/content/list/items/item1", Map.of("jcr:title", "Second", "value", "second"));
+
+        final GenericListImpl underTest = new GenericListImpl(list);
+
+        assertEquals(2, underTest.getItems().size());
+        assertEquals("First", underTest.getItems().get(0).getTitle());
+    }
+
+    @Test
+    void keyValueListResource_adaptsToGenericListModel() {
+        context.addModelsForClasses(GenericListImpl.class);
+        final Resource list = context.create().resource("/content/list",
+                "sling:resourceType", GenericListImpl.RT_KEY_VALUE_LIST);
+        context.create().resource("/content/list/items/item0", Map.of("jcr:title", "First", "value", "first"));
+
+        final GenericList adapted = list.adaptTo(GenericList.class);
+
+        assertEquals(1, adapted.getItems().size());
+        assertEquals("First", adapted.getItems().get(0).getTitle());
+    }
+
+    @Test
     void lookupTitle_returnsTitleForKnownValue_andNullForUnknown() {
         final Resource list = context.create().resource("/content/list");
         context.create().resource("/content/list/item0", Map.of("jcr:title", "First", "value", "first"));

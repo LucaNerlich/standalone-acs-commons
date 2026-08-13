@@ -7,9 +7,8 @@ import java.util.Locale;
  * A generic, author-managed list of title/value pairs (e.g. to back a Granite UI select's options).
  * <p>
  * Adapt a {@link com.day.cq.wcm.api.Page} whose content resource is
- * {@code acs-genericlists/components/utilities/genericlist} to this type via {@link GenericListAdapterFactory}.
- * There is no Sling Model registered directly against that resource type - construct {@link GenericListImpl}
- * yourself (from any resource's {@code list} child) if you need to read one without a {@code Page}.
+ * {@code acs-genericlists/components/page} to this type via {@link GenericListAdapterFactory}. The page's
+ * {@code root/keyValueList} component can also be adapted directly to this interface as a Sling Model.
  */
 public interface GenericList {
 

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jcr:root xmlns:jcr="http://www.jcp.org/jcr/1.0" xmlns:cq="http://www.day.com/jcr/cq/1.0" xmlns:sling="http://sling.apache.org/jcr/sling/1.0"
     jcr:primaryType="cq:Component"
-    jcr:title="Legacy Generic List Page"
-    jcr:description="Compatibility proxy for generic-list pages created with version 1.1.0 and earlier."
-    sling:resourceSuperType="acs-genericlists/components/page"
+    jcr:title="ACS Generic Lists Page"
+    jcr:description="Page proxy for ACS Generic Lists editable templates."
+    sling:resourceSuperType="core/wcm/components/page/v3/page"
     componentGroup=".hidden"/>

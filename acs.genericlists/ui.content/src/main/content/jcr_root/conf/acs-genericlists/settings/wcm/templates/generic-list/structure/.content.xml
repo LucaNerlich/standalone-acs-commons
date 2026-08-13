@@ -4,5 +4,16 @@
     <jcr:content
         cq:template="/conf/acs-genericlists/settings/wcm/templates/generic-list"
         jcr:primaryType="cq:PageContent"
-        sling:resourceType="acs-genericlists/components/utilities/genericlist"/>
+        sling:resourceType="acs-genericlists/components/page">
+        <root
+            jcr:primaryType="nt:unstructured"
+            sling:resourceType="core/wcm/components/container/v1/container"
+            editable="{Boolean}true"
+            layout="responsiveGrid">
+            <keyValueList
+                jcr:primaryType="nt:unstructured"
+                sling:resourceType="acs-genericlists/components/key-value-list"
+                editable="{Boolean}true"/>
+        </root>
+    </jcr:content>
 </jcr:root>

@@ -2,7 +2,10 @@ package com.adobe.acs.genericlists;
 
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ValueMap;
+import org.apache.sling.models.annotations.Model;
+import org.apache.sling.models.annotations.injectorspecific.Self;
 
+import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -11,12 +14,19 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+@Model(
+        adaptables = Resource.class,
+        adapters = GenericList.class,
+        resourceType = GenericListImpl.RT_KEY_VALUE_LIST)
 public final class GenericListImpl implements GenericList {
 
-    static final String RT_GENERIC_LIST = "acs-genericlists/components/utilities/genericlist";
+    static final String RT_GENERIC_LIST_PAGE = "acs-genericlists/components/page";
+    static final String RT_KEY_VALUE_LIST = "acs-genericlists/components/key-value-list";
+    static final String RT_LEGACY_GENERIC_LIST = "acs-genericlists/components/utilities/genericlist";
     static final String PN_TITLE = "jcr:title";
     static final String PN_VALUE = "value";
     static final String TITLE_PREFIX = PN_TITLE + ".";
+    static final String NN_ITEMS = "items";
     static final String NN_ITEM = "item";
 
     public static final class ItemImpl implements Item {
@@ -70,17 +80,17 @@ public final class GenericListImpl implements GenericList {
     private final List<Item> items;
     private final Map<String, Item> valueMapping;
 
-    public GenericListImpl(final Resource listParsys) {
-        if (listParsys == null) {
+    @Inject
+    public GenericListImpl(@Self final Resource listResource) {
+        if (listResource == null) {
             items = Collections.emptyList();
             valueMapping = Collections.emptyMap();
         } else {
             final List<Item> tempItems = new ArrayList<>();
             final Map<String, Item> tempValueMapping = new HashMap<>();
-            // The Granite multifield dialog nests rows one level deeper, under a fixed "item" child (matching
-            // the "name" path given to its composite field) - fall back to the parsys' own direct children for
-            // content authored without going through that dialog (e.g. via repoinit).
-            final Resource itemsNode = listParsys.getChild(NN_ITEM) != null ? listParsys.getChild(NN_ITEM) : listParsys;
+            // Composite multifields persist their rows below the field's named child. The legacy page-properties
+            // dialog used "item" while the standalone component uses the clearer "items" name.
+            final Resource itemsNode = getItemsResource(listResource);
             final Iterator<Resource> children = itemsNode.listChildren();
             while (children.hasNext()) {
                 final Resource res = children.next();
@@ -96,6 +106,15 @@ public final class GenericListImpl implements GenericList {
             items = Collections.unmodifiableList(tempItems);
             valueMapping = Collections.unmodifiableMap(tempValueMapping);
         }
+    }
+
+    private static Resource getItemsResource(final Resource listResource) {
+        final Resource items = listResource.getChild(NN_ITEMS);
+        if (items != null) {
+            return items;
+        }
+        final Resource legacyItems = listResource.getChild(NN_ITEM);
+        return legacyItems == null ? listResource : legacyItems;
     }
 
     @Override
