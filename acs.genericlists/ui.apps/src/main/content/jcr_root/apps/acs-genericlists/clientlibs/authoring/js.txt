@@ -1,0 +1,2 @@
+#base=.
+authoring-validation.js

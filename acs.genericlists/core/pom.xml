@@ -21,7 +21,7 @@
     <parent>
         <groupId>com.adobe.acs</groupId>
         <artifactId>acsgenericlists.parent</artifactId>
-        <version>1.2.0</version>
+        <version>1.3.0</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -50,7 +50,9 @@
                         <configuration>
                             <bnd><![CDATA[
 Import-Package: javax.annotation;version=0.0.0,*
-Export-Package: com.adobe.acs.genericlists
+Export-Package: com.adobe.acs.genericlists.api;version=1.3.0,com.adobe.acs.genericlists;version=1.3.0
+Private-Package: com.adobe.acs.genericlists.impl
+Sling-Model-Packages: com.adobe.acs.genericlists.impl,com.adobe.acs.genericlists
                                 ]]></bnd>
                         </configuration>
                     </execution>

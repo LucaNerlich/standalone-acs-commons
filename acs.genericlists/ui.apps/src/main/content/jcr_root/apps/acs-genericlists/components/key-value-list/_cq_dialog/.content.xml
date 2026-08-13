@@ -2,7 +2,8 @@
 <jcr:root xmlns:jcr="http://www.jcp.org/jcr/1.0" xmlns:sling="http://sling.apache.org/jcr/sling/1.0"
     jcr:primaryType="nt:unstructured"
     jcr:title="Key/Value List"
-    sling:resourceType="cq/gui/components/authoring/dialog">
+    sling:resourceType="cq/gui/components/authoring/dialog"
+    extraClientlibs="[acs-genericlists.authoring]">
     <content
         jcr:primaryType="nt:unstructured"
         sling:resourceType="granite/ui/components/coral/foundation/container">
@@ -15,35 +16,76 @@
                         jcr:primaryType="nt:unstructured"
                         sling:resourceType="granite/ui/components/coral/foundation/container">
                         <items jcr:primaryType="nt:unstructured">
+                            <metadata
+                                jcr:primaryType="nt:unstructured"
+                                sling:resourceType="granite/ui/components/coral/foundation/fieldset"
+                                jcr:title="List metadata">
+                                <items jcr:primaryType="nt:unstructured">
+                                    <title
+                                        jcr:primaryType="nt:unstructured"
+                                        sling:resourceType="granite/ui/components/coral/foundation/form/textfield"
+                                        fieldLabel="Display title"
+                                        fieldDescription="Optional title used by the management console and APIs."
+                                        name="./jcr:title"/>
+                                    <description
+                                        jcr:primaryType="nt:unstructured"
+                                        sling:resourceType="granite/ui/components/coral/foundation/form/textarea"
+                                        fieldLabel="Description"
+                                        fieldDescription="Optional authoring and governance note."
+                                        name="./jcr:description"/>
+                                    <defaultLocale
+                                        jcr:primaryType="nt:unstructured"
+                                        sling:resourceType="granite/ui/components/coral/foundation/form/textfield"
+                                        fieldLabel="Default locale"
+                                        fieldDescription="Optional BCP-47 tag, for example en, de-CH, or zh-Hant-TW."
+                                        name="./defaultLocale"
+                                        validation="acs-genericlists-locale"/>
+                                    <supportedLocales
+                                        jcr:primaryType="nt:unstructured"
+                                        sling:resourceType="granite/ui/components/coral/foundation/form/multifield"
+                                        fieldLabel="Supported locales"
+                                        fieldDescription="Optional BCP-47 locales available to this list.">
+                                        <field
+                                            jcr:primaryType="nt:unstructured"
+                                            sling:resourceType="granite/ui/components/coral/foundation/form/textfield"
+                                            name="./supportedLocales"
+                                            validation="acs-genericlists-locale"/>
+                                    </supportedLocales>
+                                </items>
+                            </metadata>
                             <items
                                 jcr:primaryType="nt:unstructured"
                                 sling:resourceType="granite/ui/components/coral/foundation/form/multifield"
                                 composite="{Boolean}true"
-                                fieldLabel="Key/Value Pairs"
-                                fieldDescription="Pairs are displayed and returned in this order.">
+                                fieldLabel="List items"
+                                fieldDescription="Titles and values are returned in this order. Values are required, nonblank, and unique. A list supports up to 500 items."
+                                data-acs-genericlists-items="true">
                                 <field
                                     jcr:primaryType="nt:unstructured"
                                     sling:resourceType="granite/ui/components/coral/foundation/container"
                                     name="./items">
                                     <items jcr:primaryType="nt:unstructured">
-                                        <key
+                                        <title
                                             jcr:primaryType="nt:unstructured"
                                             sling:resourceType="granite/ui/components/coral/foundation/form/textfield"
-                                            fieldLabel="Key"
+                                            fieldLabel="Title"
                                             name="./jcr:title"
-                                            required="{Boolean}true"/>
+                                            required="{Boolean}true"
+                                            validation="acs-genericlists-title"/>
                                         <value
                                             jcr:primaryType="nt:unstructured"
                                             sling:resourceType="granite/ui/components/coral/foundation/form/textfield"
                                             fieldLabel="Value"
+                                            fieldDescription="Unique stable identifier used by consumers."
                                             name="./value"
-                                            required="{Boolean}true"/>
+                                            required="{Boolean}true"
+                                            validation="acs-genericlists-value"/>
                                         <translations
                                             jcr:primaryType="nt:unstructured"
                                             sling:resourceType="granite/ui/components/coral/foundation/form/multifield"
                                             composite="{Boolean}true"
-                                            fieldLabel="Localized Titles"
-                                            fieldDescription="Optional locale/title pairs, for example de, de-CH, or en-US.">
+                                            fieldLabel="Localized titles"
+                                            fieldDescription="Optional unique BCP-47 locale/title pairs, for example de, de-CH, or zh-Hant-TW. Up to 50 entries per item.">
                                             <field
                                                 jcr:primaryType="nt:unstructured"
                                                 sling:resourceType="granite/ui/components/coral/foundation/container"
@@ -54,13 +96,15 @@
                                                         sling:resourceType="granite/ui/components/coral/foundation/form/textfield"
                                                         fieldLabel="Locale"
                                                         name="./locale"
-                                                        required="{Boolean}true"/>
+                                                        required="{Boolean}true"
+                                                        validation="acs-genericlists-locale"/>
                                                     <title
                                                         jcr:primaryType="nt:unstructured"
                                                         sling:resourceType="granite/ui/components/coral/foundation/form/textfield"
-                                                        fieldLabel="Localized Title"
+                                                        fieldLabel="Localized title"
                                                         name="./title"
-                                                        required="{Boolean}true"/>
+                                                        required="{Boolean}true"
+                                                        validation="acs-genericlists-title"/>
                                                 </items>
                                             </field>
                                         </translations>

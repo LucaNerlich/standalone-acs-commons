@@ -3,6 +3,48 @@
 All notable changes to this module are documented here. Format loosely follows
 [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [1.3.0] - 2026-08-13
+
+### Added
+
+- Added the exported `com.adobe.acs.genericlists.api` contract with immutable list snapshots, metadata,
+  validation diagnostics, BCP-47 helpers, and an explicit migration service/report API. The former standalone API
+  remains as a deprecated compatibility facade.
+- Added deterministic server-side `GenericListSchema` validation: nonblank/length-limited rows, unique values,
+  normalized unique locales, maximum list/translation sizes, and diagnostics for malformed repository data.
+- Added full BCP-47 script/region fallback, including legacy dotted title-property compatibility.
+- Added localized `list.json` and `/mnt/acs-commons/lists` delivery using `locale` or request language, with
+  `Vary: Accept-Language` and `Content-Language` headers.
+- Added runtime compatibility for original ACS Commons resource/data-source types and ordered `/mnt` roots that
+  resolve modern `/content/generic-lists` content before legacy `/etc/acs-commons/lists` content.
+- Added the optional `acsgenericlists.compat` bundle for controlled migration of Java consumers importing
+  `com.adobe.acs.commons.genericlists.GenericList`.
+- Added a dry-run-first migration service and authenticated JSON endpoint at `/bin/acs-genericlists/migrate`.
+- Added a permission-aware author console at `/bin/acs-genericlists/console` plus management API for standalone
+  list browse/search/create/copy/move/delete/import/export/where-used/publication operations.
+- Added the `acsgenericlists.all` aggregate package that embeds the bundle, repository structure, UI application,
+  and template content in one installable artifact.
+
+### Changed
+
+- Moved new implementation classes to a private `impl` package while retaining deprecated 1.x class facades for binary compatibility.
+- Replaced HTL interface instantiation with a resource-type-scoped `KeyValueListModel`, restoring deterministic HTL
+  rendering without making unrelated resources adaptable.
+- The Key/Value List preview now renders only in Author mode and no longer ships Coral UI to Publish.
+- Enhanced the author dialog with list metadata, BCP-47 guidance, client-side duplicate/length checks, and clearer
+  scalable import/export guidance.
+- Page adaptation now supports an explicit `genericListPath`, the historic component location, or exactly one
+  canonical descendant, making customized templates safer.
+- Enhanced Granite datasource options with configured locale, sorting, optional empty option/text, and disabled
+  values while retaining authored order as the default.
+
+### Fixed
+
+- Fixed the 1.2.0 HTL regression caused by resolving the unregistered `GenericList` interface as a use object.
+- Fixed divergent duplicate-value behavior: output and lookup now consistently retain the first valid occurrence
+  and report later duplicates.
+- Fixed the `/mnt/acs-commons/lists` default root so native ACS list content is actually readable during migration.
+
 ## [1.2.0] - 2026-08-13
 
 ### Added

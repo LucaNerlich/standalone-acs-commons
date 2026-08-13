@@ -1,22 +1,31 @@
-<sly data-sly-use.list="com.adobe.acs.genericlists.GenericList"
-     data-sly-use.clientlib="/libs/granite/sightly/templates/clientlib.html"
-     data-sly-call="${clientlib.all @ categories='coralui3'}"></sly>
+<sly data-sly-use.list="com.adobe.acs.genericlists.impl.KeyValueListModel"
+     data-sly-test.authorMode="${!wcmmode.disabled}">
+    <div data-sly-test.hasItems="${list.items.size}" class="acs-genericlists-key-value-list">
+        <table>
+            <caption>Generic list values (author preview only)</caption>
+            <thead>
+                <tr>
+                    <th scope="col">Title</th>
+                    <th scope="col">Value</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr data-sly-repeat.item="${list.items}">
+                    <td>${item.title}</td>
+                    <td>${item.value}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 
-<table data-sly-test.hasItems="${list.items.size}" is="coral-table" class="acs-genericlists-key-value-list">
-    <thead is="coral-table-head">
-        <tr is="coral-table-row">
-            <th is="coral-table-headercell">Key</th>
-            <th is="coral-table-headercell">Value</th>
-        </tr>
-    </thead>
-    <tbody is="coral-table-body">
-        <tr is="coral-table-row" data-sly-repeat.item="${list.items}">
-            <td is="coral-table-cell">${item.title}</td>
-            <td is="coral-table-cell">${item.value}</td>
-        </tr>
-    </tbody>
-</table>
+    <div data-sly-test="${list.validationIssues.size}" class="acs-genericlists-key-value-list__validation" role="alert">
+        <p>Some invalid list rows are excluded from runtime output.</p>
+        <ul>
+            <li data-sly-repeat.issue="${list.validationIssues}">${issue.message}</li>
+        </ul>
+    </div>
 
-<div data-sly-test="${!hasItems}"
-     class="cq-placeholder"
-     data-emptytext="Key/Value List"></div>
+    <div data-sly-test="${!hasItems}"
+         class="cq-placeholder"
+         data-emptytext="Key/Value List"></div>
+</sly>

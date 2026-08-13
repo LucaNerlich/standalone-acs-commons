@@ -2,9 +2,10 @@ package com.adobe.acs.genericlists;
 
 import com.day.cq.wcm.api.Page;
 import org.apache.sling.api.adapter.AdapterFactory;
-import org.apache.sling.api.resource.Resource;
 import org.osgi.service.component.annotations.Component;
 
+/** @deprecated Compatibility OSGi adapter facade; use Resource/Page adaptation to the API interface. */
+@Deprecated(since = "1.3.0", forRemoval = false)
 @Component(
         service = AdapterFactory.class,
         property = {
@@ -13,41 +14,11 @@ import org.osgi.service.component.annotations.Component;
         })
 public class GenericListAdapterFactory implements AdapterFactory {
 
+    private final com.adobe.acs.genericlists.impl.GenericListAdapterFactory delegate =
+            new com.adobe.acs.genericlists.impl.GenericListAdapterFactory();
+
     @Override
-    @SuppressWarnings("unchecked")
     public <AdapterType> AdapterType getAdapter(final Object adaptable, final Class<AdapterType> type) {
-        if (type != GenericList.class || !(adaptable instanceof Page page)) {
-            return null;
-        }
-
-        final Resource listResource = getListResource(page.getContentResource());
-        if (listResource == null) {
-            return null;
-        }
-
-        return (AdapterType) new GenericListImpl(listResource);
-    }
-
-    static Resource getListResource(final Resource pageContent) {
-        if (pageContent == null) {
-            return null;
-        }
-        if (GenericListImpl.RT_KEY_VALUE_LIST.equals(pageContent.getResourceType())) {
-            return pageContent;
-        }
-
-        // Check the exact in-house legacy type before isResourceType(), which follows the supertype chain.
-        if (GenericListImpl.RT_LEGACY_GENERIC_LIST.equals(pageContent.getResourceType())) {
-            return pageContent.getChild("list");
-        }
-
-        if (pageContent.isResourceType(GenericListImpl.RT_GENERIC_LIST_PAGE)) {
-            final Resource component = pageContent.getChild("root/keyValueList");
-            return component != null && component.isResourceType(GenericListImpl.RT_KEY_VALUE_LIST)
-                    ? component
-                    : null;
-        }
-
-        return null;
+        return delegate.getAdapter(adaptable, type);
     }
 }

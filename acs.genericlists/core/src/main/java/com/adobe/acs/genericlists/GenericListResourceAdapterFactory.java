@@ -1,9 +1,10 @@
 package com.adobe.acs.genericlists;
 
 import org.apache.sling.api.adapter.AdapterFactory;
-import org.apache.sling.api.resource.Resource;
 import org.osgi.service.component.annotations.Component;
 
+/** @deprecated Compatibility OSGi resource-adapter facade. */
+@Deprecated(since = "1.3.0", forRemoval = false)
 @Component(
         service = AdapterFactory.class,
         property = {
@@ -12,14 +13,11 @@ import org.osgi.service.component.annotations.Component;
         })
 public class GenericListResourceAdapterFactory implements AdapterFactory {
 
-    @Override
-    @SuppressWarnings("unchecked")
-    public <AdapterType> AdapterType getAdapter(final Object adaptable, final Class<AdapterType> type) {
-        if (type != GenericList.class || !(adaptable instanceof Resource resource)) {
-            return null;
-        }
+    private final com.adobe.acs.genericlists.impl.GenericListResourceAdapterFactory delegate =
+            new com.adobe.acs.genericlists.impl.GenericListResourceAdapterFactory();
 
-        final Resource listResource = GenericListAdapterFactory.getListResource(resource);
-        return listResource == null ? null : (AdapterType) new GenericListImpl(listResource);
+    @Override
+    public <AdapterType> AdapterType getAdapter(final Object adaptable, final Class<AdapterType> type) {
+        return delegate.getAdapter(adaptable, type);
     }
 }

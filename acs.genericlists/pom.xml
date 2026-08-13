@@ -20,15 +20,17 @@
     <groupId>com.adobe.acs</groupId>
     <artifactId>acsgenericlists.parent</artifactId>
     <packaging>pom</packaging>
-    <version>1.2.0</version>
+    <version>1.3.0</version>
     <name>ACS Generic Lists - Parent</name>
     <description>In-house replacement for the ACS AEM Commons "Generic Lists" feature, standalone and buildable/deployable on its own against any AEM as a Cloud Service instance.</description>
 
     <modules>
         <module>core</module>
+        <module>compat</module>
         <module>ui.apps.structure</module>
         <module>ui.apps</module>
         <module>ui.content</module>
+        <module>all</module>
     </modules>
 
     <properties>
