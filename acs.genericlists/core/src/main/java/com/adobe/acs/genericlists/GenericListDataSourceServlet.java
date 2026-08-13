@@ -4,8 +4,6 @@ import com.adobe.granite.ui.components.ds.DataSource;
 import com.adobe.granite.ui.components.ds.EmptyDataSource;
 import com.adobe.granite.ui.components.ds.SimpleDataSource;
 import com.adobe.granite.ui.components.ds.ValueMapResource;
-import com.day.cq.wcm.api.Page;
-import com.day.cq.wcm.api.PageManager;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.SlingHttpServletResponse;
 import org.apache.sling.api.resource.Resource;
@@ -28,8 +26,9 @@ import java.util.Locale;
 
 /**
  * In-house replacement for ACS AEM Commons' Generic Lists datasource JSP. Feeds a Granite UI select/radiogroup's
- * options from an existing {@code acs-genericlists} page: set the field's own {@code sling:resourceType} to
- * {@link #RESOURCE_TYPE} and point its {@code datasource} child node's {@code path} property at that page.
+ * options from a standalone Generic List resource or an authoring page that contains one: set the field's own
+ * {@code sling:resourceType} to {@link #RESOURCE_TYPE} and point its {@code datasource} child node's {@code path}
+ * property at the resource or page.
  */
 @Component(service = Servlet.class)
 @SlingServletResourceTypes(
@@ -51,13 +50,7 @@ public class GenericListDataSourceServlet extends SlingSafeMethodsServlet {
             return;
         }
 
-        final PageManager pageManager = resolver.adaptTo(PageManager.class);
-        final Page genericListPage = pageManager == null ? null : pageManager.getPage(genericListPath);
-        if (genericListPage == null) {
-            return;
-        }
-
-        final GenericList list = genericListPage.adaptTo(GenericList.class);
+        final GenericList list = GenericListJsonSupport.fromResource(resolver.getResource(genericListPath));
         if (list == null) {
             return;
         }

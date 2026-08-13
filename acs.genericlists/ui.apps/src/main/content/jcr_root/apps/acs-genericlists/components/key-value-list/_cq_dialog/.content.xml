@@ -38,6 +38,32 @@
                                             fieldLabel="Value"
                                             name="./value"
                                             required="{Boolean}true"/>
+                                        <translations
+                                            jcr:primaryType="nt:unstructured"
+                                            sling:resourceType="granite/ui/components/coral/foundation/form/multifield"
+                                            composite="{Boolean}true"
+                                            fieldLabel="Localized Titles"
+                                            fieldDescription="Optional locale/title pairs, for example de, de-CH, or en-US.">
+                                            <field
+                                                jcr:primaryType="nt:unstructured"
+                                                sling:resourceType="granite/ui/components/coral/foundation/container"
+                                                name="./translations">
+                                                <items jcr:primaryType="nt:unstructured">
+                                                    <locale
+                                                        jcr:primaryType="nt:unstructured"
+                                                        sling:resourceType="granite/ui/components/coral/foundation/form/textfield"
+                                                        fieldLabel="Locale"
+                                                        name="./locale"
+                                                        required="{Boolean}true"/>
+                                                    <title
+                                                        jcr:primaryType="nt:unstructured"
+                                                        sling:resourceType="granite/ui/components/coral/foundation/form/textfield"
+                                                        fieldLabel="Localized Title"
+                                                        name="./title"
+                                                        required="{Boolean}true"/>
+                                                </items>
+                                            </field>
+                                        </translations>
                                     </items>
                                 </field>
                             </items>

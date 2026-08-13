@@ -3,6 +3,26 @@
 All notable changes to this module are documented here. Format loosely follows
 [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [1.2.0] - 2026-08-13
+
+### Added
+
+- Added direct headless `Resource#adaptTo(GenericList.class)` support for the canonical
+  `acs-genericlists/components/key-value-list` resource type.
+- Added the ACS-compatible `.list.json` servlet and `/mnt/acs-commons/lists` JSON resource provider.
+- Added authoring and lookup support for locale/title pairs below each row's `translations` child.
+
+### Changed
+
+- Generic List resources are now the primary API; pages and editable templates are optional authoring wrappers.
+- The Granite datasource now accepts either a standalone list resource or a list page.
+- Removed the unrestricted Sling Model adaptation that allowed unrelated resources to become empty lists.
+
+### Fixed
+
+- Fixed the in-house legacy adapter branch being shadowed by its resource supertype.
+- Explicitly reject original `acs-commons/components/utilities/genericlist` resource types.
+
 ## [1.1.1] - 2026-08-13
 
 ### Changed

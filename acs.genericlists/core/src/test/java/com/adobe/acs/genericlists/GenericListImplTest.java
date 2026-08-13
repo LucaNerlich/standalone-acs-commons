@@ -2,6 +2,7 @@ package com.adobe.acs.genericlists;
 
 import io.wcm.testing.mock.aem.junit5.AemContext;
 import io.wcm.testing.mock.aem.junit5.AemContextExtension;
+import org.apache.sling.api.adapter.AdapterFactory;
 import org.apache.sling.api.resource.Resource;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -73,8 +74,10 @@ class GenericListImplTest {
     }
 
     @Test
-    void keyValueListResource_adaptsToGenericListModel() {
-        context.addModelsForClasses(GenericListImpl.class);
+    void keyValueListResource_adaptsToGenericList() {
+        context.registerService(AdapterFactory.class, new GenericListResourceAdapterFactory(), Map.of(
+                AdapterFactory.ADAPTABLE_CLASSES, new String[]{Resource.class.getName()},
+                AdapterFactory.ADAPTER_CLASSES, new String[]{GenericList.class.getName()}));
         final Resource list = context.create().resource("/content/list",
                 "sling:resourceType", GenericListImpl.RT_KEY_VALUE_LIST);
         context.create().resource("/content/list/items/item0", Map.of("jcr:title", "First", "value", "first"));
@@ -126,5 +129,24 @@ class GenericListImplTest {
         final GenericListImpl underTest = new GenericListImpl(list);
 
         assertEquals("Schweizer Standard", underTest.lookupTitle("first", Locale.of("de", "CH")));
+    }
+
+    @Test
+    void lookupTitle_withLocale_readsTranslationsAuthoredByDialog() {
+        final Resource list = context.create().resource("/content/list");
+        context.create().resource("/content/list/item0", Map.of(
+                "jcr:title", "Default",
+                "value", "first"));
+        context.create().resource("/content/list/item0/translations/item0", Map.of(
+                "locale", "de",
+                "title", "Standard"));
+        context.create().resource("/content/list/item0/translations/item1", Map.of(
+                "locale", "de-CH",
+                "title", "Schweizer Standard"));
+
+        final GenericListImpl underTest = new GenericListImpl(list);
+
+        assertEquals("Schweizer Standard", underTest.lookupTitle("first", Locale.of("de", "CH")));
+        assertEquals("Standard", underTest.lookupTitle("first", Locale.of("de", "AT")));
     }
 }

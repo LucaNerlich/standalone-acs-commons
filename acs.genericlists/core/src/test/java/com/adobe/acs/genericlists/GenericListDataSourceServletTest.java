@@ -2,14 +2,15 @@ package com.adobe.acs.genericlists;
 
 import com.adobe.granite.ui.components.ds.DataSource;
 import com.adobe.granite.ui.components.ds.EmptyDataSource;
-import com.day.cq.wcm.api.Page;
 import io.wcm.testing.mock.aem.junit5.AemContext;
 import io.wcm.testing.mock.aem.junit5.AemContextExtension;
+import org.apache.sling.api.adapter.AdapterFactory;
 import org.apache.sling.api.resource.Resource;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.util.Iterator;
+import java.util.Locale;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -65,5 +66,28 @@ class GenericListDataSourceServletTest {
         assertEquals("first", option.getValueMap().get("value", String.class));
         assertEquals("First", option.getValueMap().get("text", String.class));
         assertFalse(iterator.hasNext());
+    }
+
+    @Test
+    void doGet_withStandaloneGenericListResource_populatesDataSourceFromItems() {
+        context.registerService(AdapterFactory.class, new GenericListResourceAdapterFactory(), Map.of(
+                AdapterFactory.ADAPTABLE_CLASSES, new String[]{Resource.class.getName()},
+                AdapterFactory.ADAPTER_CLASSES, new String[]{GenericList.class.getName()}));
+        context.create().resource("/content/my-list",
+                "sling:resourceType", GenericListImpl.RT_KEY_VALUE_LIST);
+        context.create().resource("/content/my-list/items/item0",
+                Map.of("jcr:title", "First", "value", "first"));
+        context.create().resource("/content/my-list/items/item0/translations/item0",
+                Map.of("locale", "de-CH", "title", "Erste"));
+        context.create().resource("/content/field/datasource", Map.of("path", "/content/my-list"));
+        context.currentResource("/content/field");
+        context.request().setLocale(Locale.of("de", "CH"));
+
+        underTest.doGet(context.request(), context.response());
+
+        final Resource option = ((DataSource) context.request()
+                .getAttribute(DataSource.class.getName())).iterator().next();
+        assertEquals("first", option.getValueMap().get("value", String.class));
+        assertEquals("Erste", option.getValueMap().get("text", String.class));
     }
 }

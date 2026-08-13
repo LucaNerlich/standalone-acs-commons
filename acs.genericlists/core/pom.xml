@@ -21,14 +21,14 @@
     <parent>
         <groupId>com.adobe.acs</groupId>
         <artifactId>acsgenericlists.parent</artifactId>
-        <version>1.1.1</version>
+        <version>1.2.0</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <artifactId>acsgenericlists.core</artifactId>
     <packaging>jar</packaging>
     <name>ACS Generic Lists - Core</name>
-    <description>OSGi bundle providing the GenericList Sling Model/adapter, the in-house replacement for ACS AEM Commons' Generic Lists feature.</description>
+    <description>OSGi bundle providing the GenericList resource/page adapters, the in-house replacement for ACS AEM Commons' Generic Lists feature.</description>
 
     <build>
         <plugins>
@@ -51,7 +51,6 @@
                             <bnd><![CDATA[
 Import-Package: javax.annotation;version=0.0.0,*
 Export-Package: com.adobe.acs.genericlists
-Sling-Model-Packages: com.adobe.acs.genericlists
                                 ]]></bnd>
                         </configuration>
                     </execution>

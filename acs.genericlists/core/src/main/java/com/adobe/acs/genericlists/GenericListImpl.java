@@ -2,10 +2,7 @@ package com.adobe.acs.genericlists;
 
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ValueMap;
-import org.apache.sling.models.annotations.Model;
-import org.apache.sling.models.annotations.injectorspecific.Self;
 
-import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -14,10 +11,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-@Model(
-        adaptables = Resource.class,
-        adapters = GenericList.class,
-        resourceType = GenericListImpl.RT_KEY_VALUE_LIST)
 public final class GenericListImpl implements GenericList {
 
     static final String RT_GENERIC_LIST_PAGE = "acs-genericlists/components/page";
@@ -28,17 +21,26 @@ public final class GenericListImpl implements GenericList {
     static final String TITLE_PREFIX = PN_TITLE + ".";
     static final String NN_ITEMS = "items";
     static final String NN_ITEM = "item";
+    static final String NN_TRANSLATIONS = "translations";
+    static final String PN_LOCALE = "locale";
+    static final String PN_TRANSLATED_TITLE = "title";
 
     public static final class ItemImpl implements Item {
 
         private final String title;
         private final String value;
         private final ValueMap props;
+        private final Resource itemResource;
 
         public ItemImpl(final String title, final String value, final ValueMap props) {
+            this(title, value, props, null);
+        }
+
+        public ItemImpl(final String title, final String value, final ValueMap props, final Resource itemResource) {
             this.title = title;
             this.value = value;
             this.props = props;
+            this.itemResource = itemResource;
         }
 
         @Override
@@ -68,7 +70,25 @@ public final class GenericListImpl implements GenericList {
         }
 
         private String getLocalizedTitle(final Locale locale) {
-            return props.get(TITLE_PREFIX + locale.toString().toLowerCase(Locale.ROOT), String.class);
+            final String localeKey = locale.toString().toLowerCase(Locale.ROOT);
+            final String propertyTitle = props.get(TITLE_PREFIX + localeKey, String.class);
+            if (propertyTitle != null) {
+                return propertyTitle;
+            }
+
+            final Resource translations = itemResource == null ? null : itemResource.getChild(NN_TRANSLATIONS);
+            if (translations == null) {
+                return null;
+            }
+            for (final Resource translation : translations.getChildren()) {
+                final ValueMap translationProperties = translation.getValueMap();
+                final String authoredLocale = translationProperties.get(PN_LOCALE, String.class);
+                if (authoredLocale != null
+                        && localeKey.equals(authoredLocale.trim().replace('-', '_').toLowerCase(Locale.ROOT))) {
+                    return translationProperties.get(PN_TRANSLATED_TITLE, String.class);
+                }
+            }
+            return null;
         }
 
         @Override
@@ -80,8 +100,7 @@ public final class GenericListImpl implements GenericList {
     private final List<Item> items;
     private final Map<String, Item> valueMapping;
 
-    @Inject
-    public GenericListImpl(@Self final Resource listResource) {
+    public GenericListImpl(final Resource listResource) {
         if (listResource == null) {
             items = Collections.emptyList();
             valueMapping = Collections.emptyMap();
@@ -98,7 +117,7 @@ public final class GenericListImpl implements GenericList {
                 final String title = map.get(PN_TITLE, String.class);
                 final String value = map.get(PN_VALUE, String.class);
                 if (title != null) {
-                    final ItemImpl item = new ItemImpl(title, value, map);
+                    final ItemImpl item = new ItemImpl(title, value, map, res);
                     tempItems.add(item);
                     tempValueMapping.put(value, item);
                 }

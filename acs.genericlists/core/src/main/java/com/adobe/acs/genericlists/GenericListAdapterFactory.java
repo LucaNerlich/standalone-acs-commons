@@ -20,12 +20,7 @@ public class GenericListAdapterFactory implements AdapterFactory {
             return null;
         }
 
-        final Resource pageContent = page.getContentResource();
-        if (pageContent == null) {
-            return null;
-        }
-
-        final Resource listResource = getListResource(pageContent);
+        final Resource listResource = getListResource(page.getContentResource());
         if (listResource == null) {
             return null;
         }
@@ -33,7 +28,19 @@ public class GenericListAdapterFactory implements AdapterFactory {
         return (AdapterType) new GenericListImpl(listResource);
     }
 
-    private static Resource getListResource(final Resource pageContent) {
+    static Resource getListResource(final Resource pageContent) {
+        if (pageContent == null) {
+            return null;
+        }
+        if (GenericListImpl.RT_KEY_VALUE_LIST.equals(pageContent.getResourceType())) {
+            return pageContent;
+        }
+
+        // Check the exact in-house legacy type before isResourceType(), which follows the supertype chain.
+        if (GenericListImpl.RT_LEGACY_GENERIC_LIST.equals(pageContent.getResourceType())) {
+            return pageContent.getChild("list");
+        }
+
         if (pageContent.isResourceType(GenericListImpl.RT_GENERIC_LIST_PAGE)) {
             final Resource component = pageContent.getChild("root/keyValueList");
             return component != null && component.isResourceType(GenericListImpl.RT_KEY_VALUE_LIST)
@@ -41,9 +48,6 @@ public class GenericListAdapterFactory implements AdapterFactory {
                     : null;
         }
 
-        // Preserve adaptation of pages created with versions <= 1.1.0.
-        return pageContent.isResourceType(GenericListImpl.RT_LEGACY_GENERIC_LIST)
-                ? pageContent.getChild("list")
-                : null;
+        return null;
     }
 }

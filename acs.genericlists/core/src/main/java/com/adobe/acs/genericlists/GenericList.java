@@ -6,9 +6,11 @@ import java.util.Locale;
 /**
  * A generic, author-managed list of title/value pairs (e.g. to back a Granite UI select's options).
  * <p>
- * Adapt a {@link com.day.cq.wcm.api.Page} whose content resource is
- * {@code acs-genericlists/components/page} to this type via {@link GenericListAdapterFactory}. The page's
- * {@code root/keyValueList} component can also be adapted directly to this interface as a Sling Model.
+ * The canonical headless representation is a resource of type
+ * {@code acs-genericlists/components/key-value-list}, with its ordered rows stored below an {@code items} child.
+ * That resource can be adapted directly to this interface. For authoring convenience, a
+ * {@link com.day.cq.wcm.api.Page} of type {@code acs-genericlists/components/page} delegates to its
+ * {@code root/keyValueList} resource.
  */
 public interface GenericList {
 
