@@ -21,6 +21,7 @@
         <module>acs.environment-indicator</module>
         <module>acs.workflow</module>
         <module>acs.genericlists</module>
+        <module>acs.pagereferences</module>
     </modules>
 
 </project>

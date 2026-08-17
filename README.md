@@ -17,6 +17,8 @@ list (or just copying that folder elsewhere) doesn't break anything.
 - [`acs.workflow`](acs.workflow/README.md) - in-house replacement for ACS AEM Commons' `WorkflowPackageManager`.
 - [`acs.genericlists`](acs.genericlists/README.md) - in-house replacement for ACS AEM Commons' "Generic Lists"
   feature.
+- [`acs.pagereferences`](acs.pagereferences/README.md) - in-house replacement for ACS AEM Commons'
+  `PagesReferenceProvider`.
 
 ## Using a module in your own project
 
