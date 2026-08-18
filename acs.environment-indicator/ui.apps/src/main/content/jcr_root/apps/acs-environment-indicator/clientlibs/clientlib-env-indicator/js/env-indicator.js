@@ -106,7 +106,8 @@
         const unifiedShellBadge = getUnifiedShellBadge();
         if (unifiedShellBadge) {
             unifiedShellBadge.innerText = LABEL;
-        } else {
+        } else if (document.querySelector('coral-shell-header')) {
+            // Do not add a fixed badge to views such as page/dialog authoring that have no shell.
             showOwnBadge(LABEL);
         }
     }
