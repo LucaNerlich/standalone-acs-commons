@@ -6,6 +6,7 @@
 <%@ page import="com.adobe.acs.include.ParameterizedResourceWrapper" %>
 <%@ page import="com.adobe.granite.ui.components.Config" %>
 <%@ page import="org.apache.sling.api.resource.Resource" %>
+<%@ page import="java.util.Map" %>
 <%
 
     final Config cfg = cmp.getConfig();
@@ -25,13 +26,19 @@
     }
 
     final Resource parametersResource = resource.getChild("parameters");
+    final Map<String, String> ownParameters = ParameterizedResourceWrapper.toParameterMap(parametersResource);
+
+    // Parameter cascading: combines this include's own parameters (if any) with an ancestor include's
+    // parameters (if this include is itself nested inside an already-parameterized snippet), own values
+    // winning on key collision. Existing includes with no ancestor parameters are unaffected.
+    final Map<String, String> parameters = ParameterizedResourceWrapper.cascadeParameters(resource, ownParameters);
 
     // Opt-in namespace cascading: combines this include's own "namespace" attribute (if any) with an
     // ancestor include's namespace (if this include is itself nested inside an already-namespaced snippet).
     // Existing includes with no "namespace" attribute and no ancestor namespace are unaffected.
     final String namespace = ParameterizedResourceWrapper.cascadeNamespace(resource, cfg.get("namespace", ""));
 
-    final Resource wrapped = ParameterizedResourceWrapper.wrap(targetResource, parametersResource, namespace);
+    final Resource wrapped = ParameterizedResourceWrapper.wrapParameters(targetResource, parameters, namespace);
 
     // "hide" on the included snippet's own root (as opposed to one of its descendants, already handled by
     // getChild()/listChildren()) skips the whole include - there's no parent wrapper around this one to have

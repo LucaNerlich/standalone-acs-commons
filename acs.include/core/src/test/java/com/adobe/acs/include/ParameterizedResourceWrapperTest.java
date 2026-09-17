@@ -244,4 +244,63 @@ class ParameterizedResourceWrapperTest {
 
         assertEquals("not-a-number", wrapped.getValueMap().get("cols", String.class));
     }
+
+    @Test
+    void cascadeParameters_usesOwnParametersWhenNoAmbientOnes() {
+        final Resource plainResource = context.create().resource("/content/plain");
+
+        assertEquals(Map.of("fieldLabel", "Own Label"),
+                ParameterizedResourceWrapper.cascadeParameters(plainResource, Map.of("fieldLabel", "Own Label")));
+    }
+
+    @Test
+    void cascadeParameters_usesAmbientParametersWhenOwnOnesAreEmpty() {
+        final Resource target = context.create().resource("/content/target");
+        final Resource ambient = ParameterizedResourceWrapper.wrapParameters(target,
+                Map.of("fieldLabel", "Ambient Label"), null);
+
+        assertEquals(Map.of("fieldLabel", "Ambient Label"),
+                ParameterizedResourceWrapper.cascadeParameters(ambient, Map.of()));
+    }
+
+    @Test
+    void cascadeParameters_combinesAmbientAndOwnParameters() {
+        final Resource target = context.create().resource("/content/target");
+        final Resource ambient = ParameterizedResourceWrapper.wrapParameters(target,
+                Map.of("variantClass", "lli-variant-x"), null);
+
+        assertEquals(Map.of("variantClass", "lli-variant-x", "abstractPlainDisabled", "true"),
+                ParameterizedResourceWrapper.cascadeParameters(ambient, Map.of("abstractPlainDisabled", "true")));
+    }
+
+    @Test
+    void cascadeParameters_ownValueWinsOverAmbientOnCollision() {
+        final Resource target = context.create().resource("/content/target");
+        final Resource ambient = ParameterizedResourceWrapper.wrapParameters(target,
+                Map.of("fieldLabel", "Ambient Label"), null);
+
+        assertEquals(Map.of("fieldLabel", "Own Label"),
+                ParameterizedResourceWrapper.cascadeParameters(ambient, Map.of("fieldLabel", "Own Label")));
+    }
+
+    @Test
+    void wrap_nestedIncludeWithNoOwnParametersInheritsAmbientPlaceholderValue() {
+        // Simulates an outer include (has its own <parameters>) including an inner one (no <parameters> of
+        // its own) - the inner include's placeholder should still resolve.
+        final Resource outerTarget = context.create().resource("/content/outer");
+        final Resource innerTarget = context.create().resource("/content/inner",
+                Map.of("disabled", "${{abstractPlainDisabled:false}}"));
+
+        final Resource outerWrapped = ParameterizedResourceWrapper.wrap(outerTarget,
+                context.create().resource("/content/outerParameters", Map.of("abstractPlainDisabled", "true")));
+
+        // What include.jsp does for the inner include: no own "parameters" child, so ownParameters is empty,
+        // and cascadeParameters falls through entirely to the ambient (outer) map.
+        final Map<String, String> innerParameters =
+                ParameterizedResourceWrapper.cascadeParameters(outerWrapped, Map.of());
+        final Resource innerWrapped = ParameterizedResourceWrapper.wrapParameters(innerTarget, innerParameters,
+                null);
+
+        assertEquals("true", innerWrapped.getValueMap().get("disabled", String.class));
+    }
 }

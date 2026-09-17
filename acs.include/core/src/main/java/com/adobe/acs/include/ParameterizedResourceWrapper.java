@@ -13,6 +13,10 @@ import java.util.stream.StreamSupport;
  * String properties are substituted with values from a flat parameters map (see {@link Placeholder}), falling
  * back to the literal default (or an empty string) when a key isn't supplied.
  * <p>
+ * A nested {@code acs-include} automatically sees its ancestor's parameters too ({@link #cascadeParameters}) -
+ * an own {@code parameters} child is only needed to add new keys or override an ambient one, not to "relay" an
+ * ambient value back under the same name.
+ * <p>
  * Two additional, opt-in capabilities mirror ACS Commons' "Parameterized Include for Dialog Widgets":
  * <ul>
  *     <li>namespace cascading ({@link #wrap(Resource, Resource, String)}, {@link #cascadeNamespace}) - prefixes
@@ -78,7 +82,27 @@ public final class ParameterizedResourceWrapper extends ResourceWrapper {
      */
     public static ParameterizedResourceWrapper wrap(final Resource target, final Resource parametersResource,
                                                     final String namespace) {
-        return new ParameterizedResourceWrapper(target, toParameterMap(parametersResource), namespace);
+        return wrapParameters(target, toParameterMap(parametersResource), namespace);
+    }
+
+    /**
+     * Named distinctly from {@link #wrap(Resource, Resource, String)} rather than overloading it - a {@code null}
+     * second argument (used throughout existing call sites for "no parameters"/"no namespace") would otherwise be
+     * ambiguous between the {@code Resource} and {@code Map} overloads.
+     *
+     * @param target     the resource to wrap (e.g. the resource resolved from an include's {@code path})
+     * @param parameters the flat parameters map to substitute from - typically the result of
+     *                   {@link #cascadeParameters}, so that an already-cascaded ambient map can be passed straight
+     *                   through without round-tripping via a {@code Resource}
+     * @param namespace  the active namespace (see {@link #cascadeNamespace}), or {@code null}/empty if namespacing
+     *                   is not in use
+     * @return {@code target} wrapped so its subtree's placeholders are substituted from {@code parameters}, and (if
+     * {@code namespace} is non-empty) {@link #NAMESPACED_PROPERTIES} are prefixed with it
+     */
+    public static ParameterizedResourceWrapper wrapParameters(final Resource target,
+                                                              final Map<String, String> parameters,
+                                                              final String namespace) {
+        return new ParameterizedResourceWrapper(target, parameters, namespace);
     }
 
     /**
@@ -101,7 +125,38 @@ public final class ParameterizedResourceWrapper extends ResourceWrapper {
         return (ownNamespace == null || ownNamespace.isEmpty()) ? ambient : ambient + "/" + ownNamespace;
     }
 
-    private static Map<String, String> toParameterMap(final Resource parametersResource) {
+    /**
+     * Combines an ancestor include's ambient parameters (if this include is itself nested inside an
+     * already-parameterized snippet) with this include's own parameters, matching the cascading semantics already
+     * used for {@link #cascadeNamespace}. Own values win over the ambient ones on key collision.
+     *
+     * @param currentResource the resource currently being rendered (e.g. include.jsp's bound {@code resource}) -
+     *                        only resources this class itself produced (via recursion) carry ambient parameters
+     * @param ownParameters   this include's own parameters (e.g. from {@link #toParameterMap} on its own
+     *                        {@code parameters} child), never {@code null}
+     * @return {@code ownParameters} merged over the ambient parameters map (own wins on collision), or just
+     * {@code ownParameters} if there is no ambient one
+     */
+    public static Map<String, String> cascadeParameters(final Resource currentResource,
+                                                         final Map<String, String> ownParameters) {
+        if (!(currentResource instanceof ParameterizedResourceWrapper)) {
+            return ownParameters;
+        }
+        final Map<String, String> ambient = ((ParameterizedResourceWrapper) currentResource).parameters;
+        if (ambient.isEmpty()) {
+            return ownParameters;
+        }
+        final Map<String, String> merged = new HashMap<>(ambient);
+        merged.putAll(ownParameters);
+        return merged;
+    }
+
+    /**
+     * @param parametersResource a {@code parameters} child resource, or {@code null}
+     * @return that resource's own (non-{@code jcr:}) String properties as a flat map, or an empty map if
+     * {@code parametersResource} is {@code null}
+     */
+    public static Map<String, String> toParameterMap(final Resource parametersResource) {
         final Map<String, String> parameters = new HashMap<>();
         if (parametersResource != null) {
             for (final Map.Entry<String, Object> entry : parametersResource.getValueMap().entrySet()) {
